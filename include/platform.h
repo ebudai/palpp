@@ -9,4 +9,10 @@ namespace platform
 	uint64_t available_swap_space();
 	uint64_t used_swap_space();
 	void sleep(std::chrono::nanoseconds ns);
+	
+	template <typename rep, typename period> 
+	void sleep(std::chrono::duration<rep, period> time)
+	{
+		sleep(std::chrono::duration_cast<std::chrono::nanoseconds>(time));
+	}
 }
