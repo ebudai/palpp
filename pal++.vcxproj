@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\intrinsics.h" />
     <ClInclude Include="include\platform.h" />
   </ItemGroup>
   <ItemGroup>

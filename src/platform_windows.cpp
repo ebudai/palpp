@@ -26,11 +26,11 @@ namespace platform
 		return memInfo.ullTotalPageFile - memInfo.ullAvailPhys;
 	}
 
-	void sleep(std::chrono::nanoseconds ns)
+	void sleep(int64_t nanos)
 	{
 		using namespace std::chrono;
 
-		auto nanoseconds = ns.count();
+		auto nanoseconds = nanos;
 		auto seconds = nanoseconds / 1'000'000'000;
 		nanoseconds -= seconds * 1'000'000'000;
 		timespec request

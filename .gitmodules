@@ -1,3 +1,6 @@
 [submodule "libs/winpthreads-msvc"]
 	path = libs/winpthreads-msvc
 	url = https://github.com/Bakhazard/winpthreads-msvc.git
+[submodule "libs/palpp"]
+	path = libs/palpp
+	url = https://github.com/ebudai/palpp.git
