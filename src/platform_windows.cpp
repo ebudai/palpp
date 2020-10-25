@@ -3,6 +3,8 @@
 #include "pthread.h"
 #include <Windows.h>
 
+using namespace std::chrono;
+
 namespace platform
 {
 	uint64_t available_memory()
@@ -26,17 +28,17 @@ namespace platform
 		return memInfo.ullTotalPageFile - memInfo.ullAvailPhys;
 	}
 
-	void sleep(int64_t nanos)
+	void sleep(high_resolution_clock::duration duration)
 	{
 		using namespace std::chrono;
 
-		auto nanoseconds = nanos;
-		auto seconds = nanoseconds / 1'000'000'000;
-		nanoseconds -= seconds * 1'000'000'000;
+		auto nanos = duration_cast<nanoseconds>(duration).count();
+		auto seconds = nanos / 1'000'000'000;
+		nanos -= seconds * 1'000'000'000;
 		timespec request
 		{
 			.tv_sec = seconds,
-			.tv_nsec = static_cast<long>(nanoseconds)
+			.tv_nsec = static_cast<long>(nanos)
 		};
 
 		nanosleep(&request, nullptr);
