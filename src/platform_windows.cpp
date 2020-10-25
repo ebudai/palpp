@@ -1,9 +1,12 @@
 #ifdef _WIN32
 #include "platform.h"
 #include "pthread.h"
+#include "intrinsics.h"
 #include <Windows.h>
 
 using namespace std::chrono;
+
+extern "C" NTSYSAPI NTSTATUS NTAPI NtSetTimerResolution(ULONG DesiredResolution, BOOLEAN SetResolution, PULONG CurrentResolution);
 
 namespace platform
 {
@@ -42,6 +45,17 @@ namespace platform
 		};
 
 		nanosleep(&request, nullptr);
+	}
+
+	void flush_denormals_to_zero()
+	{
+		_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
+	}
+
+	void minimize_system_timer_resolution()
+	{
+		ULONG current_resolution;
+		NtSetTimerResolution(5000, TRUE, &current_resolution);
 	}
 }
 #endif //_WIN32
