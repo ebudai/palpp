@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef _WIN32
-#	include <immintrin.h>
+#	include <intrin.h>
 #elif defined(__linux__)
 #	include <x86intrin.h>
 #elif defined(MACOS)
