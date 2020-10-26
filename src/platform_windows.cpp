@@ -7,6 +7,12 @@
 using namespace std::chrono;
 
 extern "C" NTSYSAPI NTSTATUS NTAPI NtSetTimerResolution(ULONG DesiredResolution, BOOLEAN SetResolution, PULONG CurrentResolution);
+extern "C" NTSYSAPI NTSTATUS NTAPI NtQueryTimerResolution(OUT PULONG MinimumResolution,	OUT PULONG MaximumResolution, OUT PULONG CurrentResolution);
+
+namespace
+{
+	ULONG default_resolution;
+}
 
 namespace platform
 {
@@ -49,7 +55,8 @@ namespace platform
 
 	void set_denormals_to_zero()
 	{
-		_controlfp(_DN_FLUSH, _MCW_DN);
+		uint32_t current_word = 0;
+		_controlfp_s(&current_word, _DN_FLUSH, _MCW_DN);
 		_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
 		_MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_ON);
 	}
@@ -57,10 +64,15 @@ namespace platform
 	void minimize_system_timer_resolution()
 	{
 		ULONG minimum_resolution;
-		ULONG maximum_resolution;
-		ULONG current_resolution;
-		NtQueryTimerResolution()
-		NtSetTimerResolution(5000, TRUE, &current_resolution);
+		ULONG maximum_resolution;		
+		NtQueryTimerResolution(&minimum_resolution, &maximum_resolution, &default_resolution);
+		NtSetTimerResolution(minimum_resolution, TRUE, &default_resolution);
+	}
+
+	void restore_system_timer_resolution()
+	{
+		ULONG old_resolution;
+		NtSetTimerResolution(default_resolution, TRUE, &old_resolution);
 	}
 }
 #endif //_WIN32

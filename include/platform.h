@@ -11,4 +11,5 @@ namespace platform
 	void sleep(std::chrono::high_resolution_clock::duration duration);
 	void set_denormals_to_zero();
 	void minimize_system_timer_resolution();
+	void restore_system_timer_resolution();
 }
