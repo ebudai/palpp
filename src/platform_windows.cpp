@@ -47,14 +47,19 @@ namespace platform
 		nanosleep(&request, nullptr);
 	}
 
-	void flush_denormals_to_zero()
+	void set_denormals_to_zero()
 	{
+		_controlfp(_DN_FLUSH, _MCW_DN);
 		_MM_SET_FLUSH_ZERO_MODE(_MM_FLUSH_ZERO_ON);
+		_MM_SET_DENORMALS_ZERO_MODE(_MM_DENORMALS_ZERO_ON);
 	}
 
 	void minimize_system_timer_resolution()
 	{
+		ULONG minimum_resolution;
+		ULONG maximum_resolution;
 		ULONG current_resolution;
+		NtQueryTimerResolution()
 		NtSetTimerResolution(5000, TRUE, &current_resolution);
 	}
 }
