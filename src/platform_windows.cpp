@@ -66,7 +66,7 @@ namespace platform
 		ULONG minimum_resolution;
 		ULONG maximum_resolution;		
 		NtQueryTimerResolution(&minimum_resolution, &maximum_resolution, &default_resolution);
-		NtSetTimerResolution(minimum_resolution, TRUE, &default_resolution);
+		NtSetTimerResolution(maximum_resolution, TRUE, &default_resolution);
 	}
 
 	void restore_system_timer_resolution()
