@@ -9,11 +9,6 @@ using namespace std::chrono;
 extern "C" NTSYSAPI NTSTATUS NTAPI NtSetTimerResolution(ULONG DesiredResolution, BOOLEAN SetResolution, PULONG CurrentResolution);
 extern "C" NTSYSAPI NTSTATUS NTAPI NtQueryTimerResolution(OUT PULONG MinimumResolution,	OUT PULONG MaximumResolution, OUT PULONG CurrentResolution);
 
-namespace
-{
-	ULONG default_resolution;
-}
-
 namespace platform
 {
 	uint64_t available_memory()
@@ -64,15 +59,16 @@ namespace platform
 	void minimize_system_timer_resolution()
 	{
 		ULONG minimum_resolution;
-		ULONG maximum_resolution;		
-		NtQueryTimerResolution(&minimum_resolution, &maximum_resolution, &default_resolution);
-		NtSetTimerResolution(maximum_resolution, TRUE, &default_resolution);
+		ULONG maximum_resolution;
+		ULONG current_resolution;
+		NtQueryTimerResolution(&minimum_resolution, &maximum_resolution, &current_resolution);
+		NtSetTimerResolution(maximum_resolution, TRUE, &current_resolution);
 	}
 
 	void restore_system_timer_resolution()
 	{
 		ULONG old_resolution;
-		NtSetTimerResolution(default_resolution, TRUE, &old_resolution);
+		NtSetTimerResolution(0, FALSE, &old_resolution);
 	}
 }
 #endif //_WIN32
